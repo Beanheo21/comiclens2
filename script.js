@@ -14,7 +14,8 @@ async function searchPlanet() {
   apodEl.className = "apod-section hidden";
 
   try {
-    const url = `https://exoplanetarchive.ipac.caltech.edu/TAP/sync?query=select+pl_name,pl_rade,pl_masse,pl_eqt,pl_orbper,st_dist,disc_year,pl_bmasse+from+ps+where+default_flag=1+and+pl_name+like+'${encodeURIComponent(name)}'&format=json`;
+    const url = `https://exoplanetarchive.ipac.caltech.edu/TAP/sync?query=select+pl_name,pl_rade,pl_masse,pl_eqt,pl_orbper,st_dist,disc_year,pl_bmasse+from+ps+where+default_flag=1+and+pl_name+like+'${encodeURIComponent(name).replace(/%20/g, '+')}
+'&format=json`;
     const res = await fetch(url);
     const data = await res.json();
 
