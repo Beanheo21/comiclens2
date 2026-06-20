@@ -7,17 +7,42 @@
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-  <h1>CosmicLens ��</h1>
-  <p class="subtitle">Search any real exoplanet. Powered by NASA data.</p>
-
-  <div class="search-bar">
-    <input type="text" id="planet-input" placeholder="Try: Kepler-452 b" />
-    <button onclick="searchPlanet()">Search</button>
+  <div class="hero">
+    <h1>🔭 CosmicLens</h1>
+    <p class="subtitle">Explore real exoplanets using actual NASA mission data</p>
+    <div class="search-bar">
+      <input type="text" id="planet-input" placeholder="Try: WASP-76 b, K2-18 b, Kepler-452 b..." />
+      <button onclick="searchPlanet()">Search</button>
+    </div>
+    <div class="suggestions">
+      <span onclick="quickSearch('Kepler-452 b')">🌍 Kepler-452 b</span>
+      <span onclick="quickSearch('TRAPPIST-1 e')">💧 TRAPPIST-1 e</span>
+      <span onclick="quickSearch('K2-18 b')">🧬 K2-18 b</span>
+      <span onclick="quickSearch('WASP-76 b')">🌧️ WASP-76 b</span>
+      <span onclick="quickSearch('55 Cnc e')">🌋 55 Cnc e</span>
+      <span onclick="quickSearch('Kepler-16 b')">🌅 Kepler-16 b</span>
+      <span onclick="quickSearch('Proxima Centauri b')">⭐ Proxima Cen b</span>
+      <span onclick="quickSearch('PSR 1257+12 b')">☢️ PSR 1257+12 b</span>
+      <span onclick="quickSearch('GJ 504 b')">🩷 GJ 504 b</span>
+      <span onclick="quickSearch('HAT-P-7 b')">💎 HAT-P-7 b</span>
+    </div>
   </div>
 
-  <div id="result" class="result-card hidden"></div>
-  <div id="size-viz" class="size-viz hidden"></div>
-  <div id="apod-section" class="apod-section hidden"></div>
+  <div id="result-section" class="result-section hidden">
+    <div id="planet-hero" class="planet-hero"></div>
+    <div id="description-card" class="card" style="margin-bottom:1.5rem;"></div>
+    <div class="data-grid">
+      <div id="stats-card" class="card"></div>
+      <div id="hab-card" class="card"></div>
+    </div>
+    <div id="size-viz" class="card size-card"></div>
+    <div id="fun-facts" class="card" style="margin-bottom:1.5rem;"></div>
+    <div id="apod-section" class="card apod-card hidden"></div>
+  </div>
+
+  <footer style="text-align:center;padding:2rem;color:#374151;font-size:12px;border-top:1px solid #1a1a3a;margin-top:2rem;">
+    Data sourced from NASA Exoplanet Archive • NASA APOD API • Built for NASA Stardance Challenge 2026
+  </footer>
 
   <script src="script.js"></script>
 </body>
