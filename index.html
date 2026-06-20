@@ -1,98 +1,24 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>Community Health Navigator</title>
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
-  <style>
-    #map { height: 500px; margin-bottom: 20px; }
-  </style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>CosmicLens — Explore Real Exoplanets</title>
+  <link rel="stylesheet" href="style.css" />
 </head>
-<body class="bg-light">
-<div class="container mt-5">
-  <h1 class="mb-4 text-center">Community Health Navigator</h1>
-  
-  <form method="POST" class="mb-5">
-    <div class="mb-3">
-      <label for="location" class="form-label">Enter your location (ZIP / City / Address)</label>
-      <input type="text" class="form-control" id="location" name="location" required>
-    </div>
-    <div class="mb-3">
-      <label for="symptom" class="form-label">Reason for visit / Symptom (optional)</label>
-      <input type="text" class="form-control" id="symptom" name="symptom">
-    </div>
-    <button type="submit" class="btn btn-primary">Find Clinics</button>
-  </form>
+<body>
+  <h1>CosmicLens ��</h1>
+  <p class="subtitle">Search any real exoplanet. Powered by NASA data.</p>
 
-  {% if results %}
-    <div id="map"></div>
-    <h3>Recommended Clinics:</h3>
-    <table class="table table-striped">
-      <thead>
-        <tr>
-          <th>Name</th>
-          <th>Type</th>
-          <th>Address</th>
-          <th>Cost</th>
-          <th>Distance (miles)</th>
-          <th>Phone</th>
-          <th>Telehealth</th>
-        </tr>
-      </thead>
-      <tbody>
-        {% for row in results %}
-        <tr>
-          <td>{{ row['Name'] }}</td>
-          <td>{{ row['Type'] }}</td>
-          <td>{{ row['Address'] }}, {{ row['City'] }}, {{ row['State'] }} {{ row['ZIP'] }}</td>
-          <td>{{ row['Cost'] }}</td>
-          <td>{{ "%.2f"|format(row['Distance']) }}</td>
-          <td>{{ row['Phone'] }}</td>
-          <td>{{ row['Telehealth'] }}</td>
-        </tr>
-        {% endfor %}
-      </tbody>
-    </table>
-  {% endif %}
-</div>
+  <div class="search-bar">
+    <input type="text" id="planet-input" placeholder="Try: Kepler-452 b" />
+    <button onclick="searchPlanet()">Search</button>
+  </div>
 
-<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-<script>
-  {% if results %}
-  var map = L.map('map').setView([{{ user_coords[0] }}, {{ user_coords[1] }}], 12);
+  <div id="result" class="result-card hidden"></div>
+  <div id="size-viz" class="size-viz hidden"></div>
+  <div id="apod-section" class="apod-section hidden"></div>
 
-  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-    maxZoom: 19,
-    attribution: '© OpenStreetMap'
-  }).addTo(map);
-
-  // User location marker
-  L.marker([{{ user_coords[0] }}, {{ user_coords[1] }}]).addTo(map)
-    .bindPopup('You are here')
-    .openPopup();
-
-  // Clinic markers
-  var clinics = {{ results|tojson }};
-  clinics.forEach(function(clinic) {
-    var color = 'blue';
-    if(clinic.Type.includes('Dental')) color = 'green';
-    else if(clinic.Type.includes('Mental')) color = 'purple';
-    else if(clinic.Type.includes('Urgent')) color = 'red';
-
-    L.circleMarker([clinic.Latitude, clinic.Longitude], {
-      color: color,
-      radius: 8,
-      fillOpacity: 0.8
-    }).addTo(map).bindPopup(
-      '<b>' + clinic.Name + '</b><br>' +
-      clinic.Type + '<br>' +
-      clinic.Address + ', ' + clinic.City + '<br>' +
-      'Distance: ' + clinic.Distance.toFixed(2) + ' miles'
-    );
-  });
-  {% endif %}
-</script>
-
+  <script src="script.js"></script>
 </body>
 </html>
