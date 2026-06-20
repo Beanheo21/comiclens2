@@ -14,11 +14,9 @@ async function searchPlanet() {
   apodEl.className = "apod-section hidden";
 
   try {
-    const query = `select+pl_name,pl_rade,pl_masse,pl_eqt,pl_orbper,st_dist,disc_year+from+ps+where+default_flag=1+and+pl_name+like+'${name.replace(/ /g, '+')}'`;
-const url = `https://api.allorigins.win/get?url=${encodeURIComponent('https://exoplanetarchive.ipac.caltech.edu/TAP/sync?query=' + query + '&format=json')}`;
+    const url = `https://exoplanetarchive.ipac.caltech.edu/TAP/sync?query=select+pl_name,pl_rade,pl_masse,pl_eqt,pl_orbper,st_dist,disc_year+from+ps+where+default_flag=1+and+pl_name+like+'${name.replace(/ /g, '+')}'&format=json&CORS=*`; 
     const res = await fetch(url);
-    const wrapper = await res.json();
-const data = JSON.parse(wrapper.contents);
+    const data = await res.json();
 
     if (!data || data.length === 0) {
       resultEl.innerHTML = `<p class="error">No planet found for "${name}". Try: Kepler-452 b, TRAPPIST-1 e, or 55 Cnc e</p>`;
