@@ -1,49 +1,286 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>CosmicLens — Explore Real Exoplanets</title>
-  <link rel="stylesheet" href="style.css" />
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>CosmicLens — Explore Real Exoplanets</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#050510;color:#e8e8f0;min-height:100vh;}
+.hero{text-align:center;padding:5rem 2rem 3rem;background:radial-gradient(ellipse at 50% 0%,#1a1a4e 0%,#050510 70%);border-bottom:1px solid #1a1a3a;}
+h1{font-size:3rem;font-weight:800;background:linear-gradient(135deg,#7eb8f7,#a78bfa,#f472b6);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;margin-bottom:.5rem;}
+.subtitle{color:#6b7280;font-size:1.05rem;margin-bottom:2rem;}
+.search-wrap{display:flex;gap:10px;max-width:580px;margin:0 auto 1.5rem;}
+.search-wrap input{flex:1;padding:14px 20px;border-radius:50px;border:1px solid #2a2a5a;background:#0d0d2a;color:#e8e8f0;font-size:16px;outline:none;}
+.search-wrap input:focus{border-color:#7eb8f7;}
+.search-wrap button{padding:14px 28px;border-radius:50px;border:none;background:linear-gradient(135deg,#3a7bd5,#7c3aed);color:#fff;font-size:15px;font-weight:600;cursor:pointer;}
+.suggestions{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;max-width:700px;margin:0 auto;}
+.suggestions span{padding:6px 14px;border-radius:50px;border:1px solid #2a2a5a;font-size:13px;color:#9ca3af;cursor:pointer;transition:all .2s;}
+.suggestions span:hover{border-color:#7eb8f7;color:#7eb8f7;}
+.content{max-width:880px;margin:0 auto;padding:2rem 1.5rem;}
+.planet-hero{border-radius:20px;padding:2.5rem 2rem;margin-bottom:1.5rem;text-align:center;}
+.planet-hero h2{font-size:2.4rem;font-weight:800;margin-bottom:.3rem;}
+.tagline{color:#9ca3af;font-size:.95rem;margin-bottom:1.5rem;}
+.planet-ball-wrap{display:flex;justify-content:center;margin:1.5rem 0;}
+.planet-ball{border-radius:50%;animation:float 4s ease-in-out infinite;}
+@keyframes float{0%,100%{transform:translateY(0);}50%{transform:translateY(-12px);}}
+.badge-row{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin-top:1rem;}
+.badge{padding:5px 13px;border-radius:50px;font-size:12px;font-weight:600;}
+.b-blue{background:#1e3a5f;color:#7eb8f7;}
+.b-purple{background:#2d1b69;color:#a78bfa;}
+.b-green{background:#064e3b;color:#34d399;}
+.b-red{background:#4c1d1d;color:#f87171;}
+.b-yellow{background:#451a03;color:#fbbf24;}
+.b-gray{background:#1f2937;color:#9ca3af;}
+.card{background:#0d0d2a;border:1px solid #1a1a3a;border-radius:16px;padding:1.5rem;margin-bottom:1.5rem;}
+.card-title{font-size:12px;text-transform:uppercase;letter-spacing:.1em;color:#6b7280;margin-bottom:1.2rem;font-weight:600;}
+.desc-text{font-size:14px;color:#d1d5db;line-height:1.8;}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:1.5rem;margin-bottom:1.5rem;}
+.stat-row{display:flex;justify-content:space-between;align-items:center;padding:9px 0;border-bottom:1px solid #111130;}
+.stat-row:last-child{border-bottom:none;}
+.sl{font-size:12px;color:#6b7280;}
+.sv{font-size:13px;font-weight:600;color:#e8e8f0;text-align:right;}
+.hab-emoji{font-size:3.5rem;text-align:center;margin:.5rem 0;}
+.hab-verdict{font-size:1rem;font-weight:700;text-align:center;margin-bottom:.6rem;}
+.hab-bar-bg{background:#1a1a3a;border-radius:50px;height:8px;margin:.6rem 0;overflow:hidden;}
+.hab-bar{height:100%;border-radius:50px;}
+.hab-labels{display:flex;justify-content:space-between;font-size:10px;color:#374151;margin-bottom:.8rem;}
+.hab-text{font-size:13px;color:#9ca3af;line-height:1.6;text-align:center;}
+.hab-stats{margin-top:1rem;padding-top:1rem;border-top:1px solid #1a1a3a;}
+.planets-row{display:flex;align-items:flex-end;justify-content:center;gap:2.5rem;padding:1rem 0 .5rem;flex-wrap:wrap;}
+.planet-item{display:flex;flex-direction:column;align-items:center;gap:8px;}
+.pcircle{border-radius:50%;}
+.plabel{font-size:12px;color:#9ca3af;text-align:center;}
+.psub{font-size:10px;color:#4b5563;text-align:center;}
+.size-note{font-size:11px;color:#374151;text-align:center;margin-top:1rem;}
+.facts-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:.5rem;}
+.fact{background:#0a0a1f;border-radius:10px;padding:12px 14px;font-size:13px;color:#9ca3af;line-height:1.5;}
+.fact strong{display:block;color:#e8e8f0;margin-bottom:3px;font-size:11px;text-transform:uppercase;letter-spacing:.05em;}
+.apod-img{width:100%;border-radius:10px;margin:1rem 0 .8rem;}
+.apod-title{font-size:.95rem;font-weight:600;margin-bottom:.5rem;}
+.apod-desc{font-size:13px;color:#9ca3af;line-height:1.6;}
+.apod-link{font-size:12px;color:#7eb8f7;margin-top:8px;display:inline-block;text-decoration:none;}
+.hidden{display:none;}
+.loading{color:#4b5563;font-style:italic;text-align:center;padding:1.5rem;}
+.error-msg{color:#f87171;text-align:center;padding:1.5rem;font-size:1rem;}
+footer{text-align:center;padding:2rem;color:#374151;font-size:12px;border-top:1px solid #1a1a3a;margin-top:1rem;}
+@media(max-width:600px){h1{font-size:2rem;}.grid2{grid-template-columns:1fr;}.facts-grid{grid-template-columns:1fr;}.planets-row{gap:1.5rem;}}
+</style>
 </head>
 <body>
-  <div class="hero">
-    <h1>🔭 CosmicLens</h1>
-    <p class="subtitle">Explore real exoplanets using actual NASA mission data</p>
-    <div class="search-bar">
-      <input type="text" id="planet-input" placeholder="Try: WASP-76 b, K2-18 b, Kepler-452 b..." />
-      <button onclick="searchPlanet()">Search</button>
-    </div>
-    <div class="suggestions">
-      <span onclick="quickSearch('Kepler-452 b')">🌍 Kepler-452 b</span>
-      <span onclick="quickSearch('TRAPPIST-1 e')">💧 TRAPPIST-1 e</span>
-      <span onclick="quickSearch('K2-18 b')">🧬 K2-18 b</span>
-      <span onclick="quickSearch('WASP-76 b')">🌧️ WASP-76 b</span>
-      <span onclick="quickSearch('55 Cnc e')">🌋 55 Cnc e</span>
-      <span onclick="quickSearch('Kepler-16 b')">🌅 Kepler-16 b</span>
-      <span onclick="quickSearch('Proxima Centauri b')">⭐ Proxima Cen b</span>
-      <span onclick="quickSearch('PSR 1257+12 b')">☢️ PSR 1257+12 b</span>
-      <span onclick="quickSearch('GJ 504 b')">🩷 GJ 504 b</span>
-      <span onclick="quickSearch('HAT-P-7 b')">💎 HAT-P-7 b</span>
-    </div>
+<div class="hero">
+  <h1>🔭 CosmicLens</h1>
+  <p class="subtitle">Explore real exoplanets using actual NASA mission data</p>
+  <div class="search-wrap">
+    <input type="text" id="planet-input" placeholder="Try: WASP-76 b, K2-18 b, Kepler-452 b..."/>
+    <button onclick="searchPlanet()">Search</button>
   </div>
-
-  <div id="result-section" class="result-section hidden">
-    <div id="planet-hero" class="planet-hero"></div>
-    <div id="description-card" class="card" style="margin-bottom:1.5rem;"></div>
-    <div class="data-grid">
-      <div id="stats-card" class="card"></div>
-      <div id="hab-card" class="card"></div>
-    </div>
-    <div id="size-viz" class="card size-card"></div>
-    <div id="fun-facts" class="card" style="margin-bottom:1.5rem;"></div>
-    <div id="apod-section" class="card apod-card hidden"></div>
+  <div class="suggestions">
+    <span onclick="q('Kepler-452 b')">🌍 Kepler-452 b</span>
+    <span onclick="q('TRAPPIST-1 e')">�� TRAPPIST-1 e</span>
+    <span onclick="q('K2-18 b')">🧬 K2-18 b</span>
+    <span onclick="q('WASP-76 b')">🌧️ WASP-76 b</span>
+    <span onclick="q('55 Cnc e')">🌋 55 Cnc e</span>
+    <span onclick="q('Kepler-16 b')">🌅 Kepler-16 b</span>
+    <span onclick="q('Proxima Centauri b')">⭐ Proxima Cen b</span>
+    <span onclick="q('PSR 1257+12 b')">☢️ PSR 1257+12 b</span>
+    <span onclick="q('GJ 504 b')">🩷 GJ 504 b</span>
+    <span onclick="q('HAT-P-7 b')">💎 HAT-P-7 b</span>
+    <span onclick="q('LTT 9779 b')">🪞 LTT 9779 b</span>
+    <span onclick="q('WASP-12 b')">💀 WASP-12 b</span>
   </div>
+</div>
 
-  <footer style="text-align:center;padding:2rem;color:#374151;font-size:12px;border-top:1px solid #1a1a3a;margin-top:2rem;">
-    Data sourced from NASA Exoplanet Archive • NASA APOD API • Built for NASA Stardance Challenge 2026
-  </footer>
+<div id="main" class="content hidden">
+  <div id="hero" class="planet-hero"></div>
+  <div id="desc" class="card"></div>
+  <div class="grid2">
+    <div id="stats" class="card"></div>
+    <div id="hab" class="card"></div>
+  </div>
+  <div id="size" class="card"></div>
+  <div id="facts" class="card"></div>
+  <div id="apod" class="card hidden"></div>
+</div>
 
-  <script src="script.js"></script>
+<footer>Data sourced from NASA Exoplanet Archive • NASA APOD API • Built for NASA Stardance Challenge 2026</footer>
+
+<script>
+const KEY="Y1Whb7D6yCivz6pcV0HXHf22D2jHrmRXJ2a78bWK";
+const DB={
+"kepler-452 b":{n:"Kepler-452 b",r:1.63,m:5,t:265,p:384.8,d:1402,y:2015,type:"Super-Earth",star:"G-type (like our Sun)",how:"Kepler Space Telescope",jwst:false,desc:"Often called 'Earth's cousin', Kepler-452 b orbits in the habitable zone of a star nearly identical to our Sun. It's 1.5 billion years older than Earth — if life exists there, it had even more time to evolve."},
+"trappist-1 e":{n:"TRAPPIST-1 e",r:0.92,m:0.77,t:251,p:6.1,d:39,y:2017,type:"Terrestrial",star:"Ultra-cool dwarf star",how:"Spitzer Space Telescope",jwst:true,desc:"The most Earth-like of the TRAPPIST-1 system. JWST has already studied its atmosphere. One side permanently faces its star in eternal day, the other in eternal night — with a thin twilight strip where conditions might be perfect for life."},
+"trappist-1 b":{n:"TRAPPIST-1 b",r:1.09,m:1.02,t:400,p:1.5,d:39,y:2016,type:"Terrestrial",star:"Ultra-cool dwarf star",how:"TRAPPIST Telescope",jwst:true,desc:"The innermost TRAPPIST-1 planet. JWST confirmed it has no thick atmosphere — its surface is a bare, scorched rock blasted by its star. One of the first rocky planets JWST studied in detail."},
+"trappist-1 c":{n:"TRAPPIST-1 c",r:1.06,m:1.16,t:342,p:2.4,d:39,y:2016,type:"Terrestrial",star:"Ultra-cool dwarf star",how:"TRAPPIST Telescope",jwst:true,desc:"Similar in size to Venus. JWST observed it in 2023 and found it likely has little to no atmosphere, ruling out a thick CO₂ envelope and making surface life very unlikely."},
+"trappist-1 d":{n:"TRAPPIST-1 d",r:0.77,m:0.3,t:288,p:4.0,d:39,y:2017,type:"Terrestrial",star:"Ultra-cool dwarf star",how:"Spitzer Space Telescope",jwst:true,desc:"The lightest TRAPPIST planet — less massive than Earth. It receives slightly more energy than Earth from the Sun but its small mass means it may struggle to hold onto a thick atmosphere."},
+"trappist-1 f":{n:"TRAPPIST-1 f",r:1.04,m:0.93,t:219,p:9.2,d:39,y:2017,type:"Terrestrial",star:"Ultra-cool dwarf star",how:"Spitzer Space Telescope",jwst:true,desc:"On the cool outer edge of the TRAPPIST habitable zone. It could harbor liquid water if it has a thick greenhouse atmosphere. Its year is just 9 Earth days long."},
+"trappist-1 g":{n:"TRAPPIST-1 g",r:1.13,m:1.15,t:198,p:12.4,d:39,y:2017,type:"Terrestrial",star:"Ultra-cool dwarf star",how:"Spitzer Space Telescope",jwst:true,desc:"The second largest TRAPPIST planet. It may be an icy world like Europa, potentially hiding a liquid ocean beneath a frozen surface kept warm by tidal heating from its star's gravity."},
+"55 cnc e":{n:"55 Cnc e",r:1.88,m:8.63,t:1958,p:0.74,d:41,y:2004,type:"Super-Earth",star:"Binary star system",how:"Radial velocity",jwst:true,desc:"A lava world — JWST detected a massive atmosphere of vaporized rock in 2023. One side permanently faces its star in a magma ocean hundreds of kilometers deep. It rains vaporized minerals here."},
+"hd 209458 b":{n:"HD 209458 b",r:13.4,m:220,t:1459,p:3.5,d:159,y:1999,type:"Hot Jupiter",star:"Sun-like G star",how:"Transit photometry",jwst:false,desc:"The first exoplanet confirmed to transit its star and the first where we detected an atmosphere. Nicknamed 'Osiris', it has a comet-like tail of evaporating hydrogen being blown off by its star — it's slowly being destroyed."},
+"proxima centauri b":{n:"Proxima Cen b",r:1.07,m:1.27,t:234,p:11.2,d:1.3,y:2016,type:"Terrestrial",star:"Nearest star to our Sun",how:"Radial velocity",jwst:false,desc:"Our nearest known exoplanet — just 4.2 light years away, orbiting the closest star to our Solar System. If it has liquid water, it would be the most accessible habitable world. But its red dwarf star blasts it with intense stellar flares."},
+"proxima cen b":{n:"Proxima Cen b",r:1.07,m:1.27,t:234,p:11.2,d:1.3,y:2016,type:"Terrestrial",star:"Nearest star to our Sun",how:"Radial velocity",jwst:false,desc:"Our nearest known exoplanet, orbiting the closest star to our Solar System."},
+"kepler-22 b":{n:"Kepler-22 b",r:2.38,m:9.1,t:262,p:289.9,d:619,y:2011,type:"Super-Earth",star:"G-type (like our Sun)",how:"Kepler Space Telescope",jwst:false,desc:"The first Kepler planet confirmed in a habitable zone. At 2.4× Earth's radius it may be a water world — covered entirely by a global ocean hundreds of kilometers deep with no land at all."},
+"kepler-186 f":{n:"Kepler-186 f",r:1.17,m:1.71,t:188,p:129.9,d:582,y:2014,type:"Terrestrial",star:"M-dwarf red star",how:"Kepler Space Telescope",jwst:false,desc:"The first Earth-sized planet found in the habitable zone of another star. Its red dwarf sun is smaller and cooler than ours, and Kepler-186 f receives about one-third the energy Earth gets from the Sun."},
+"k2-18 b":{n:"K2-18 b",r:2.37,m:8.63,t:255,p:32.9,d:124,y:2015,type:"Hycean world",star:"Red dwarf star",how:"K2 Mission",jwst:true,desc:"JWST detected carbon dioxide AND methane in its atmosphere in 2023 — a combination only produced by living things on Earth. It may be a 'Hycean world': a hydrogen atmosphere over a liquid water ocean. One of the most exciting potential biosignature discoveries ever."},
+"wasp-12 b":{n:"WASP-12 b",r:18.0,m:457,t:2580,p:1.09,d:871,y:2008,type:"Ultra-hot Jupiter",star:"F-type star",how:"WASP Survey",jwst:false,desc:"One of the most extreme planets known. WASP-12 b is being torn apart by its star's gravity — stretched into an egg shape and will be completely devoured in about 3 million years. Its atmosphere absorbs nearly all light, making it blacker than coal."},
+"lhs 1140 b":{n:"LHS 1140 b",r:1.73,m:6.98,t:230,p:24.7,d:49,y:2017,type:"Super-Earth",star:"Quiet red dwarf",how:"MEarth Project",jwst:true,desc:"One of the best candidates for a habitable world. LHS 1140 b is a rocky super-Earth in the habitable zone of a stable, quiet red dwarf star — unlike most red dwarfs, this one doesn't blast its planet with flares. JWST is studying it now."},
+"gliese 436 b":{n:"Gliese 436 b",r:4.19,m:21.4,t:649,p:2.6,d:33,y:2004,type:"Hot Neptune",star:"Red dwarf star",how:"Radial velocity",jwst:false,desc:"A bizarre 'burning ice' world. Despite surface temperatures of 380°C, intense gravitational pressure keeps water frozen in a superhot solid form called Ice VII. It also has a giant comet-like tail of hydrogen stretching 14 million km behind it."},
+"gj 667c c":{n:"GJ 667C c",r:1.54,m:3.8,t:277,p:28.1,d:23,y:2011,type:"Super-Earth",star:"M-dwarf in triple star system",how:"HARPS spectrograph",jwst:false,desc:"A super-Earth in the habitable zone of a star that is part of a triple star system. From its surface you would see three suns in the sky at once — a breathtaking alien sunset. One of the closest potentially habitable planets."},
+"hat-p-7 b":{n:"HAT-P-7 b",r:14.5,m:560,t:2230,p:2.2,d:1044,y:2008,type:"Hot Jupiter",star:"F-type star",how:"HATNet Survey",jwst:false,desc:"A planet where it rains rubies and sapphires. At 2,230 K, aluminum oxide condenses in the cooler nightside atmosphere forming corundum clouds — the mineral that makes rubies and sapphires. Wind speeds reach 5,400 mph."},
+"wasp-76 b":{n:"WASP-76 b",r:17.7,m:614,t:2200,p:1.81,d:640,y:2013,type:"Ultra-hot Jupiter",star:"F-type star",how:"WASP Survey",jwst:true,desc:"A planet where it rains liquid iron. The dayside reaches 2,400°C — hot enough to vaporize iron. Winds at 18,000 mph carry iron vapor to the cooler nightside where it condenses and falls as iron rain. JWST has confirmed this extraordinary weather system."},
+"toi-700 d":{n:"TOI-700 d",r:1.19,m:1.72,t:246,p:37.4,d:102,y:2020,type:"Terrestrial",star:"M-dwarf red star",how:"TESS Space Telescope",jwst:true,desc:"An Earth-sized planet in the habitable zone discovered by NASA's TESS mission. TOI-700 d is tidally locked — one side bakes in permanent daylight, the other freezes in permanent night — creating a unique ring of potentially habitable climate around the terminator line."},
+"ltt 9779 b":{n:"LTT 9779 b",r:4.72,m:89,t:2305,p:0.79,d:264,y:2020,type:"Ultra-hot Neptune",star:"G-type star",how:"TESS Space Telescope",jwst:true,desc:"The shiniest planet ever found — more reflective than a mirror, reflecting 80% of its star's light due to silicate and metal clouds. JWST confirmed extraordinary titanium clouds in its atmosphere. It defies all planet formation models — it shouldn't exist where it is."},
+"kepler-16 b":{n:"Kepler-16 b",r:8.45,m:105,t:188,p:228.8,d:245,y:2011,type:"Gas giant",star:"Binary star system",how:"Kepler Space Telescope",jwst:false,desc:"The real-life Tatooine — a gas giant orbiting TWO stars simultaneously, just like in Star Wars. NASA literally called it 'the real Tatooine' at the announcement. From a hypothetical moon, you'd witness double sunsets every evening."},
+"gj 504 b":{n:"GJ 504 b",r:10.0,m:1273,t:510,p:3258,d:57,y:2013,type:"Super-Jupiter",star:"Sun-like G star",how:"Direct imaging",jwst:false,desc:"A pink gas giant directly photographed by the Subaru Telescope — one of the few exoplanets ever directly imaged. It glows magenta due to its young age and still-cooling atmosphere. It orbits 9× farther from its star than Jupiter does from our Sun."},
+"psr 1257+12 b":{n:"PSR 1257+12 b",r:0.19,m:0.02,t:0,p:25.3,d:2300,y:1992,type:"Pulsar planet",star:"Neutron star (pulsar)",how:"Pulsar timing",jwst:false,desc:"The very first exoplanet ever confirmed, discovered in 1992 orbiting a dead neutron star. Any life here would be destroyed by intense gamma rays and X-rays from the pulsar. A dark, irradiated alien world — the discovery that changed everything we knew about planets."},
+"tau ceti e":{n:"Tau Ceti e",r:1.82,m:3.93,t:322,p:168,d:11.9,y:2013,type:"Super-Earth",star:"Sun-like G star",how:"Radial velocity",jwst:false,desc:"One of the nearest potentially habitable planets at just 12 light-years away, orbiting a Sun-like star. Tau Ceti e sits at the inner edge of the habitable zone — it might be habitable or it might be more like a scorching Venus. Future telescopes may tell us."},
+"kepler-442 b":{n:"Kepler-442 b",r:1.34,m:2.3,t:233,p:112.3,d:1194,y:2015,type:"Super-Earth",star:"K-type orange dwarf",how:"Kepler Space Telescope",jwst:false,desc:"Considered one of the most Earth-like planets ever found with one of the highest Earth Similarity Index scores. It receives about 70% of the sunlight Earth gets, placing it solidly in the comfortable middle of the habitable zone."},
+"hr 8799 b":{n:"HR 8799 b",r:11.0,m:2228,t:900,p:460,d:129,y:2008,type:"Super-Jupiter",star:"A-type star",how:"Direct imaging",jwst:false,desc:"One of four giant planets directly photographed around HR 8799 — the first multi-planet system ever directly imaged. These young planets are still glowing red-hot from their formation, caught in a rare snapshot of a planetary system being born."},
+};
+
+function q(name){document.getElementById("planet-input").value=name;searchPlanet();}
+
+function searchPlanet(){
+  const name=document.getElementById("planet-input").value.trim();
+  if(!name)return;
+  const key=name.toLowerCase();
+  const p=DB[key];
+  const main=document.getElementById("main");
+  main.className="content";
+
+  if(!p){
+    document.getElementById("hero").innerHTML=`<div class="error-msg">No planet found for "${name}".<br/><span style="font-size:13px;color:#6b7280;margin-top:8px;display:block;">Click a suggestion above to explore!</span></div>`;
+    ["desc","stats","hab","size","facts"].forEach(id=>document.getElementById(id).innerHTML="");
+    document.getElementById("apod").className="card hidden";
+    return;
+  }
+
+  const r=p.r,temp=Math.round(p.t),tempC=Math.round(temp-273),year=p.y;
+  const hab=getHab(temp,r);
+  const col=r<0.5?"#888":r<1.6?"#4a9eff":r<4?"#a78bfa":r<10?"#f97316":"#f87171";
+  const bg=r<1.6?"radial-gradient(ellipse at 50% 0%,#0a1f3d 0%,#050510 70%)":r<4?"radial-gradient(ellipse at 50% 0%,#1a0a3d 0%,#050510 70%)":"radial-gradient(ellipse at 50% 0%,#2d0a0a 0%,#050510 70%)";
+  const ball=Math.min(Math.max(r*42,50),160);
+
+  const hero=document.getElementById("hero");
+  hero.style.background=bg;
+  hero.innerHTML=`
+    <h2>${p.n}</h2>
+    <p class="tagline">${p.type} &bull; ${p.star} &bull; Discovered ${year}</p>
+    <div class="planet-ball-wrap">
+      <div class="planet-ball" style="width:${ball}px;height:${ball}px;background:radial-gradient(circle at 35% 30%,${col}88,${col});box-shadow:0 0 50px ${col}44;"></div>
+    </div>
+    <div class="badge-row">
+      <span class="badge b-blue">📡 ${p.how}</span>
+      <span class="badge b-purple">📏 ${r.toFixed(2)}× Earth</span>
+      <span class="badge ${tempC>200?"b-red":tempC<-50?"b-blue":"b-green"}">🌡️ ${temp>0?tempC+"°C":"Unknown"}</span>
+      <span class="badge b-yellow">📅 ${p.p.toFixed(1)}-day year</span>
+      <span class="badge ${p.jwst?"b-green":"b-gray"}">🔭 ${p.jwst?"JWST observed ✓":"Pre-JWST"}</span>
+    </div>`;
+
+  document.getElementById("desc").innerHTML=`<div class="card-title">📖 About This Planet</div><p class="desc-text">${p.desc}</p>`;
+
+  const g=(p.m/(r*r)).toFixed(2);
+  document.getElementById("stats").innerHTML=`
+    <div class="card-title">📊 Planet Data</div>
+    <div class="stat-row"><span class="sl">Radius</span><span class="sv">${r.toFixed(2)}× Earth &nbsp;(${Math.round(r*6371).toLocaleString()} km)</span></div>
+    <div class="stat-row"><span class="sl">Mass</span><span class="sv">${p.m.toFixed(2)}× Earth</span></div>
+    <div class="stat-row"><span class="sl">Surface gravity</span><span class="sv">${g}× Earth</span></div>
+    <div class="stat-row"><span class="sl">Temperature</span><span class="sv">${temp>0?temp+" K / "+tempC+"°C / "+Math.round(tempC*9/5+32)+"°F":"Unknown"}</span></div>
+    <div class="stat-row"><span class="sl">Year length</span><span class="sv">${p.p.toFixed(1)} Earth days</span></div>
+    <div class="stat-row"><span class="sl">Distance</span><span class="sv">${p.d<10?p.d.toFixed(1):Math.round(p.d).toLocaleString()} light-years</span></div>
+    <div class="stat-row"><span class="sl">Surface area</span><span class="sv">${(r*r).toFixed(1)}× Earth's</span></div>
+    <div class="stat-row"><span class="sl">Planet type</span><span class="sv">${p.type}</span></div>
+    <div class="stat-row"><span class="sl">Host star</span><span class="sv">${p.star}</span></div>
+    <div class="stat-row"><span class="sl">Discovery</span><span class="sv">${p.how}</span></div>
+    <div class="stat-row"><span class="sl">JWST observed</span><span class="sv">${p.jwst?"✅ Yes":"❌ Not yet"}</span></div>`;
+
+  document.getElementById("hab").innerHTML=`
+    <div class="card-title">🌍 Habitability Analysis</div>
+    <div class="hab-emoji">${hab.e}</div>
+    <div class="hab-verdict" style="color:${hab.c}">${hab.v}</div>
+    <div class="hab-bar-bg"><div class="hab-bar" style="width:${hab.s}%;background:${hab.c};"></div></div>
+    <div class="hab-labels"><span>Uninhabitable</span><span>Earth-like</span></div>
+    <div class="hab-text">${hab.t}</div>
+    <div class="hab-stats">
+      <div class="stat-row"><span class="sl">Score</span><span class="sv" style="color:${hab.c}">${hab.s}/100</span></div>
+      <div class="stat-row"><span class="sl">In habitable zone</span><span class="sv">${temp>=200&&temp<=320?"✅ Yes":"❌ No"}</span></div>
+      <div class="stat-row"><span class="sl">Rocky surface likely</span><span class="sv">${r<2.5?"✅ Possibly":"❌ Gas/ice giant"}</span></div>
+      <div class="stat-row"><span class="sl">Liquid water possible</span><span class="sv">${temp>=200&&temp<=320&&r<2.5?"🌊 Maybe!":"❌ Unlikely"}</span></div>
+    </div>`;
+
+  showSize(p.n,r,col);
+  showFacts(p,tempC,g);
+  loadAPOD(year);
+}
+
+function getHab(t,r){
+  const iz=t>=200&&t<=320,big=r>2.5,hot=t>500,cold=t<150;
+  if(t===0)return{e:"☢️",v:"Pulsar Planet — Radiation Hell",c:"#f87171",s:0,t:"Orbiting a dead neutron star pulsing lethal radiation. No possibility of life whatsoever."};
+  if(iz&&!big)return{e:"🌱",v:"Potentially Habitable!",c:"#34d399",s:85,t:`At ${Math.round(t-273)}°C and ${r.toFixed(1)}× Earth's radius, conditions could support liquid water. One of the most Earth-like planets we've found!`};
+  if(hot&&r>10)return{e:"☠️",v:"Extreme Gas Giant Hell",c:"#f87171",s:2,t:`A gas giant at ${Math.round(t-273)}°C with no solid surface and crushing pressure. Spectacular but utterly uninhabitable.`};
+  if(hot)return{e:"🔥",v:"Way Too Hot",c:"#f97316",s:5,t:`At ${Math.round(t-273)}°C you'd vaporize before landing. Even lead is liquid here.`};
+  if(cold)return{e:"🧊",v:"Frozen Wasteland",c:"#93c5fd",s:8,t:`At ${Math.round(t-273)}°C everything freezes solid. No liquid water without extreme underground heat.`};
+  if(big)return{e:"💨",v:"Gas Giant — No Surface",c:"#a78bfa",s:15,t:`At ${r.toFixed(1)}× Earth's radius this is likely a gas giant. Temperature may be okay but there's nowhere to stand.`};
+  return{e:"🌡️",v:"Marginal Conditions",c:"#fbbf24",s:40,t:"Temperature and size are borderline. Could be habitable with the right atmosphere — we need more data."};
+}
+
+function showSize(name,r,col){
+  const B=24,sunR=Math.min(B*10.9,140),jupR=Math.min(B*11.2,140),eR=B,pR=Math.min(Math.max(B*r,4),140);
+  document.getElementById("size").innerHTML=`
+    <div class="card-title">📐 Size Comparison (to scale vs Earth, Jupiter & Sun)</div>
+    <div class="planets-row">
+      <div class="planet-item">
+        <div class="pcircle" style="width:${sunR*2}px;height:${sunR*2}px;background:radial-gradient(circle at 35% 30%,#ffe566,#f59d00);box-shadow:0 0 40px #f59d0055;"></div>
+        <span class="plabel">☀️ Sun</span><span class="psub">109× Earth</span>
+      </div>
+      <div class="planet-item">
+        <div class="pcircle" style="width:${jupR*2}px;height:${jupR*2}px;background:radial-gradient(circle at 35% 30%,#c8a87b,#8b5e3c);box-shadow:0 0 20px #8b5e3c44;"></div>
+        <span class="plabel">♃ Jupiter</span><span class="psub">11.2× Earth</span>
+      </div>
+      <div class="planet-item">
+        <div class="pcircle" style="width:${eR*2}px;height:${eR*2}px;background:radial-gradient(circle at 35% 30%,#4fc3f7,#1565c0);box-shadow:0 0 20px #1565c044;"></div>
+        <span class="plabel">🌍 Earth</span><span class="psub">1× baseline</span>
+      </div>
+      <div class="planet-item">
+        <div class="pcircle" style="width:${pR*2}px;height:${pR*2}px;background:radial-gradient(circle at 35% 30%,${col}99,${col});box-shadow:0 0 30px ${col}44;"></div>
+        <span class="plabel">🪐 ${name}</span><span class="psub">${r.toFixed(2)}× Earth</span>
+      </div>
+    </div>
+    <p class="size-note">Volume: ${(r*r*r).toFixed(1)}× Earth's &bull; Surface area: ${(r*r).toFixed(1)}× Earth's &bull; Circumference: ${Math.round(r*40075).toLocaleString()} km</p>`;
+}
+
+function showFacts(p,tempC,g){
+  const wt=Math.round(70*parseFloat(g)*2.2);
+  const age=Math.round(16*365/p.p);
+  const travel=p.d<5?Math.round(p.d*100)+" years":Math.round(p.d*100).toLocaleString()+" years";
+  const howFound=p.how==="Kepler Space Telescope"?"Kepler watched for tiny dips in starlight as the planet passed in front — a dimming of just 0.01%.":p.how==="Radial velocity"?"Astronomers detected the tiny wobble the planet's gravity causes in its star — a shift of just a few meters per second.":p.how==="Transit photometry"?"Scientists measured the exact drop in the star's brightness as the planet crossed in front of it.":p.how==="Direct imaging"?"The planet was directly photographed through a telescope — one of the rarest and hardest detection methods possible.":p.how==="TESS Space Telescope"?"NASA's TESS satellite monitored hundreds of thousands of stars simultaneously, catching the planet's shadow crossing its star.":p.how==="Pulsar timing"?"Scientists noticed tiny irregularities in the pulsar's ultra-precise radio pulses caused by the planet's gravitational tug.":p.how==="Spitzer Space Telescope"?"Spitzer's infrared detectors sensed the planet's heat and its shadow crossing its star with extraordinary precision.":"Detected using advanced astronomical instruments and years of patient observation.";
+  const tempCtx=tempC>2000?"rocks are gas — the entire atmosphere is vaporized minerals":tempC>1000?"rocks melt and flow as lava rivers":tempC>400?"lead boils — metal evaporates into vapor":tempC>100?"water boils instantly — a planet-wide pressure cooker":tempC>0?"liquid water could exist on the surface! Oceans possible.":tempC>-50?"like Antarctica — cold but survivable with equipment":tempC>-200?"colder than anywhere on Earth — CO₂ freezes solid":"near absolute zero — colder than Pluto";
+  document.getElementById("facts").innerHTML=`
+    <div class="card-title">🤯 Fun Facts & Deep Dives</div>
+    <div class="facts-grid">
+      <div class="fact"><strong>🚀 Travel time</strong>At 1% light speed: ${travel}. A radio message takes ${p.d.toFixed(1)} years one-way.</div>
+      <div class="fact"><strong>⚖️ Your weight there</strong>At ${g}× gravity, a 154 lb person would weigh ~${wt} lbs on ${p.n}.</div>
+      <div class="fact"><strong>🎂 Age in local years</strong>A year here = ${p.p.toFixed(1)} Earth days. A 16-year-old would be ${age.toLocaleString()} in local years!</div>
+      <div class="fact"><strong>🌡️ Temperature reality</strong>At ${tempC}°C, ${tempCtx}.</div>
+      <div class="fact"><strong>🌊 Scale of the world</strong>${p.n} has ${(p.r*p.r).toFixed(1)}× Earth's surface area — ${Math.round(p.r*p.r*510).toLocaleString()}M km² of surface.</div>
+      <div class="fact"><strong>📡 How we found it</strong>${howFound}</div>
+    </div>`;
+}
+
+async function loadAPOD(year){
+  const el=document.getElementById("apod");
+  el.className="card";
+  el.innerHTML=`<p class="loading">Loading NASA image from ${year}...</p>`;
+  try{
+    const r=await fetch(`https://api.nasa.gov/planetary/apod?api_key=${KEY}&date=${year}-06-15`);
+    const d=await r.json();
+    if(d.media_type==="image"){
+      el.innerHTML=`<div class="card-title">🌌 NASA Astronomy Picture — ${year} (Discovery Year)</div><img class="apod-img" src="${d.url}" alt="${d.title}"/><div class="apod-title">${d.title}</div><div class="apod-desc">${d.explanation.substring(0,450)}...</div><a class="apod-link" href="https://apod.nasa.gov" target="_blank">View NASA APOD archive →</a>`;
+    }else{el.className="card hidden";}
+  }catch{el.className="card hidden";}
+}
+
+document.getElementById("planet-input").addEventListener("keydown",e=>{if(e.key==="Enter")searchPlanet();});
+</script>
 </body>
 </html>
