@@ -23,6 +23,7 @@ function searchPlanet() {
         return;
       }
       const p = Array.isArray(data) ? data[0] : (data.data ? data.data[0] : Object.values(data)[0]);
+console.log("Planet data:", JSON.stringify(p));
       const radius = p.pl_rade ? parseFloat(p.pl_rade).toFixed(2) : "Unknown";
       const mass = p.pl_masse ? parseFloat(p.pl_masse).toFixed(2) : "Unknown";
       const temp = p.pl_eqt ? Math.round(p.pl_eqt) : null;
