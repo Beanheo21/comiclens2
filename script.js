@@ -22,7 +22,7 @@ function searchPlanet() {
         resultEl.innerHTML = `<p class="error">No planet found for "${name}". Try: Kepler-452 b, TRAPPIST-1 e, or 55 Cnc e</p>`;
         return;
       }
-      const p = data[0];
+      const p = Array.isArray(data) ? data[0] : (data.data ? data.data[0] : Object.values(data)[0]);
       const radius = p.pl_rade ? parseFloat(p.pl_rade).toFixed(2) : "Unknown";
       const mass = p.pl_masse ? parseFloat(p.pl_masse).toFixed(2) : "Unknown";
       const temp = p.pl_eqt ? Math.round(p.pl_eqt) : null;
