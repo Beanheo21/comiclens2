@@ -13,11 +13,9 @@ function searchPlanet() {
   vizEl.className = "size-viz hidden";
   apodEl.className = "apod-section hidden";
 
-  const encoded = encodeURIComponent(name);
-  const apiUrl = `https://exoplanetarchive.ipac.caltech.edu/TAP/sync?query=select+pl_name,pl_rade,pl_masse,pl_eqt,pl_orbper,st_dist,disc_year+from+ps+where+default_flag=1+and+pl_name+like+'${encoded}'&format=json`;
-  const proxy = `https://thingproxy.freeboard.io/fetch/${apiUrl}`;
+  const apiUrl = encodeURIComponent(`https://exoplanetarchive.ipac.caltech.edu/TAP/sync?query=select+pl_name,pl_rade,pl_masse,pl_eqt,pl_orbper,st_dist,disc_year+from+ps+where+default_flag=1+and+pl_name+like+'${name.replace(/ /g, "+")}'&format=json`);
 
-  fetch(proxy)
+  fetch(`https://api.codetabs.com/v1/proxy?quest=${apiUrl}`)
     .then(res => res.json())
     .then(data => {
       if (!data || data.length === 0) {
@@ -37,7 +35,7 @@ function searchPlanet() {
         <div class="stat-grid">
           <div class="stat"><div class="stat-label">Radius (vs Earth)</div><div class="stat-value">${radius}× Earth</div></div>
           <div class="stat"><div class="stat-label">Mass (vs Earth)</div><div class="stat-value">${mass}× Earth</div></div>
-          <div class="stat"><div class="stat-label">Avg Temperature</div><div class="stat-value">${temp !== null ? temp + " K (" + Math.round(temp - 273) + "°C)" : "Unknown"}</div></div>
+          <div class="stat"><div class="stat-label">Avg Temperature</div><div class="stat-value">${temp !== null ? temp + " K (" + Math.round(temp-273) + "°C)" : "Unknown"}</div></div>
           <div class="stat"><div class="stat-label">Year length</div><div class="stat-value">${period} days</div></div>
           <div class="stat"><div class="stat-label">Distance from Earth</div><div class="stat-value">${dist} light-years</div></div>
           <div class="stat"><div class="stat-label">Discovered</div><div class="stat-value">${year}</div></div>
@@ -61,7 +59,7 @@ function getHabitability(temp, radius) {
   const inZone = temp >= 200 && temp <= 320;
   const tooBig = r > 2.5;
   if (inZone && !tooBig) return { cls: "hab-good", emoji: "🌱", text: `Temperature of ${Math.round(temp-273)}°C is in the habitable zone. Could be Earth-like!` };
-  if (temp > 500) return { cls: "hab-bad", emoji: "🔥", text: `At ${Math.round(temp-273)}°C you'd vaporize instantly. Hard pass.` };
+  if (temp > 500) return { cls: "hab-bad", emoji: "��", text: `At ${Math.round(temp-273)}°C you'd vaporize instantly. Hard pass.` };
   if (temp < 150) return { cls: "hab-bad", emoji: "🧊", text: `At ${Math.round(temp-273)}°C everything is frozen solid.` };
   if (tooBig) return { cls: "hab-meh", emoji: "💨", text: `At ${r}× Earth's radius this is likely a gas giant — no surface to stand on.` };
   return { cls: "hab-meh", emoji: "🌡️", text: `Marginal conditions — borderline survivable with the right gear.` };
